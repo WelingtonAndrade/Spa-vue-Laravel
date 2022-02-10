@@ -1,18 +1,12 @@
-import App from "../components/App";
-
 require('./bootstrap');
 import Vue from 'vue';
-
-import VueRouter from "vue-router";
-import {routes} from "./routes";
-Vue.use(VueRouter);
-const  router = new VueRouter({
-    mode: 'history',
-    routes
-})
-
-//Criando Instancia de Vue
-
+import App from './components/mainapp'
+import router from './router'
+import ViewUI from 'view-design';
+import 'view-design/dist/styles/iview.css';
+import commom from "./commom";
+Vue.use(ViewUI);
+Vue.mixin(commom);
 const app = new Vue ({
     el: '#app',
     router,

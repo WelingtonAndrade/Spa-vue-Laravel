@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::resource('/app/tag', \App\Http\Controllers\Panel\TagController::class)->only('index','show','store','update','destroy');
 
 Route::get('{any}' , function (){
     return view('welcome');

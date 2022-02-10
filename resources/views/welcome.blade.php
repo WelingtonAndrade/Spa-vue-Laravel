@@ -4,26 +4,17 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>FullStack Spa Vue with Laravel Api</title>
+        <title>Full stack blog</title>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/css/all.css">
 
-        <!-- Styles -->
-        <style>
-
-        </style>
-
-        <style>
-            body {
-                font-family: 'Nunito', sans-serif;
-            }
-        </style>
     </head>
-    <body class="antialiased">
-        <div id="app"></div>
-
-        <script src="{{ mix('js/app.js') }}" type="text/javascript"></script>
-
+    <body>
+         <div id="app">
+             <mainapp></mainapp>
+         </div>
     </body>
+    <script src="{{mix('/js/app.js')}}"></script>
+    <!-- import iView -->
+    <script src="//unpkg.com/view-design/dist/iview.min.js"></script>
 </html>
