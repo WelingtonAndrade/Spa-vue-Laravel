@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::resource('/app/tag', \App\Http\Controllers\Panel\TagController::class)->only('index','show','store','update','destroy');
+Route::post('/app/category/imageUpload', [\App\Http\Controllers\Panel\TagController::class, 'imageUpload']);
+Route::resource('/app/category', \App\Http\Controllers\Panel\CategoryController::class)->only('index','show','store','update','destroy');
 
 Route::get('{any}' , function (){
     return view('welcome');

@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use mysql_xdevapi\Exception;
 
-class TagController extends Controller
+class CategoryController extends Controller
 {
     protected $model;
 
-    public function __construct(Tag $model)
+    public function __construct(Category $model)
     {
         $this->model = $model;
     }
@@ -34,10 +35,10 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-       $teste = $this->validate($request, [
-            'tagName' => 'required|min:3|string',
-           ]);
-       return $this->model->create($request->all());
+        $teste = $this->validate($request, [
+            'categoryName' => 'required|min:3|string',
+        ]);
+        return $this->model->create($request->all());
     }
 
     /**
@@ -61,10 +62,10 @@ class TagController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'tagName' => 'required|min:3|string',
+            'categoryName' => 'required|min:3|string',
         ]);
         return $this->model->where('id', $id)->update([
-            'tagName' => $request->tagName
+            'categoryName' => $request->categoryName
         ]);
     }
 
@@ -76,11 +77,6 @@ class TagController extends Controller
      */
     public function destroy($id)
     {
-        return Tag::destroy($id);
-    }
-    public function imageUpload(Request $request){
-        $picName = time(). '.' . $request->iconImage->extension();
-        $request->iconImage->move(public_path('uploads'), $picName);
-        return $picName;
+        return $this->model->destroy($id);
     }
 }

@@ -6,74 +6,80 @@ import newRoutePage from './components/pages/newRoutePage'
 import hooks from './components/pages/basic/hooks.vue'
 import methods from './components/pages/basic/methods.vue'
 
-// project pages 
+// project pages
 import home from './components/pages/home'
-import tags from './components/pages/tags'
+import tags from './admin/pages/tag.vue'
+import category from "./admin/pages/category";
 
 
 const routes = [
     //projects routes....
 
     {
-        path: '/', 
-        component: home, 
-       
+        path: '/',
+        component: home,
+
     },
     {
-        path: '/tags', 
-        component: tags, 
-       
+        path: '/tags',
+        component: tags,
+
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
     {
-        path: '/my-new-vue-route', 
-        component: firstPage, 
-       
+        path: '/category',
+        component: category,
+
     },
 
 
-    /// basic tutorials routes... 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     {
-        path: '/my-new-vue-route', 
-        component: firstPage, 
-       
+        path: '/my-new-vue-route',
+        component: firstPage,
+
+    },
+
+
+    /// basic tutorials routes...
+    {
+        path: '/my-new-vue-route',
+        component: firstPage,
+
     },
     {
-        path: '/new-route', 
+        path: '/new-route',
         component: newRoutePage
     },
 
-    // vue hooks 
+    // vue hooks
     {
-        path: '/hooks', 
+        path: '/hooks',
         component: hooks
     },
-    // more basics 
+    // more basics
     {
-        path: '/methods', 
+        path: '/methods',
         component: methods
     },
 
@@ -83,7 +89,7 @@ const routes = [
 
 
 export default new Router({
-    mode: 'history', 
+    mode: 'history',
     routes
 
 })

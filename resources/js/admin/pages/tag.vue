@@ -1,33 +1,33 @@
 <template>
     <div>
-       <div class="content">
-			<div class="container-fluid">
+        <div class="content">
+            <div class="container-fluid">
 
-				<!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
-				<div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
-					<p class="_title0">Tags |     <Button @click="addModal=true"><Icon type="md-add" /> Add Tag</Button>
+                <!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
+                <div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
+                    <p class="_title0">Tags |     <Button @click="addModal=true"><Icon type="md-add" /> Add Tag</Button>
 
-					<div class="_overflow _table_div">
-						<table class="_table">
-							<tr>
-								<th>Id</th>
-								<th>Tag Name</th>
-								<th>Created At</th>
-								<th>Action</th>
-							</tr>
-							<tr v-for="(tag, i) in tags" :key="i" v-if="tags.length">
-								<td>{{ tag.id}}</td>
-								<td class="tag_name">{{ tag.tagName }}</td>
-								<td>{{ tag.created_at }}</td>
-								<td>
+                    <div class="_overflow _table_div">
+                        <table class="_table">
+                            <tr>
+                                <th>Id</th>
+                                <th>Tag Name</th>
+                                <th>Created At</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr v-for="(tag, i) in tags" :key="i" v-if="tags.length">
+                                <td>{{ tag.id}}</td>
+                                <td class="tag_name">{{ tag.tagName }}</td>
+                                <td>{{ tag.created_at }}</td>
+                                <td>
                                     <Button @click="showEditModal(tag, i)" type="info" size="small"><Icon size="15" type="ios-create" />Edit</Button>
                                     <Button @click="showDeletingModal(tag ,i)" :loading="tag.isDeleting" type="error" size="small"><Icon type="md-trash" />Delete</Button>
-								</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-				 <Page :total="100" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <Page :total="100" />
                 <Modal
                     v-model="addModal"
                     title="Adicionar tags"
@@ -63,30 +63,30 @@
                         <Button type="error" size="large" long :loading="isDeliting" @click="deleteTag(deleteItem)">Delete</Button>
                     </div>
                 </Modal>
-			</div>
-		</div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
 export default {
     data(){
-      return {
-          data: {
-              tagName: ''
-          },
-          addModal: false,
-          loading: false,
-          editModal: false,
-          tags: [],
-          editData: {
-              tagName: ''
-          },
-          index: -1,
-          showDeleteModal: false,
-          deleteItem: {},
-          deleteI: -'',
-          isDeliting: false
-      }
+        return {
+            data: {
+                tagName: ''
+            },
+            addModal: false,
+            loading: false,
+            editModal: false,
+            tags: [],
+            editData: {
+                tagName: ''
+            },
+            index: -1,
+            showDeleteModal: false,
+            deleteItem: {},
+            deleteI: -'',
+            isDeliting: false
+        }
     },
     methods: {
         async addTag(){
@@ -105,7 +105,7 @@ export default {
             else if (res.status === 422){
                 if (res.data.errors) {
                     for (var item in res.data.errors) {
-                       this.error('Ops !',res.data.errors[item])
+                        this.error('Ops !',res.data.errors[item])
                         this.loading = false
                     }
                 }
@@ -115,19 +115,20 @@ export default {
             }
         },
         async deleteTag(deleteItem){
-                this.isDeliting = true;
-                let res = await this.callApi('delete', '/app/tag/' + deleteItem.id);
-                if (res.status === 200){
-
-                    this.tags.splice(this.deleteI,1)
-                    this.showDeleteModal = false;
+            this.isDeliting = true;
+            let res = await this.callApi('delete', '/app/tag/' + deleteItem.id);
+            if (res.status === 200){
+                this.tags.splice(this.deleteI,1)
+                this.showDeleteModal = false;
+                return this.error('Ops !','Erro ao deletar a tag !', 5);
             }
-                else {
-                    setTimeout(() => {
-                        this.isDeliting = false
-                        return this.error('Ops !','Erro ao deletar a tag !', 5);
-                    }, 1000)
-                }
+            else {
+                setTimeout(() => {
+                    this.isDeliting = false
+                    return this.error('Ops !','Erro ao deletar a tag !', 5);
+                }, 1000)
+                this.showDeleteModal = false;
+            }
         },
         showDeletingModal(tag, i){
             console.log(tag);
