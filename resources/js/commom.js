@@ -5,7 +5,7 @@ export default {
         }
     },
     methods: {
-           async callApi( method, url, dataObj = null ){
+           async  callApi( method, url, dataObj = null ){
                return await axios({
                    method: method,
                    url: url,

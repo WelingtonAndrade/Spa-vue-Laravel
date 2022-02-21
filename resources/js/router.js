@@ -32,55 +32,10 @@ const routes = [
     },
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     {
         path: '/my-new-vue-route',
         component: firstPage,
 
-    },
-
-
-    /// basic tutorials routes...
-    {
-        path: '/my-new-vue-route',
-        component: firstPage,
-
-    },
-    {
-        path: '/new-route',
-        component: newRoutePage
-    },
-
-    // vue hooks
-    {
-        path: '/hooks',
-        component: hooks
-    },
-    // more basics
-    {
-        path: '/methods',
-        component: methods
     },
 
 

@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\Tag;
 use Illuminate\Http\Request;
-use mysql_xdevapi\Exception;
 
 class CategoryController extends Controller
 {
@@ -35,8 +33,9 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $teste = $this->validate($request, [
+        $this->validate($request, [
             'categoryName' => 'required|min:3|string',
+            'iconImage' => 'required'
         ]);
         return $this->model->create($request->all());
     }
@@ -78,5 +77,27 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         return $this->model->destroy($id);
+    }
+    public function imageUpload(Request $request){
+        $this->validate($request, [
+            'iconImage' => 'required|mimes:jpg,png,jpeg'
+        ]);
+        $picName = time(). '.' . $request->iconImage->extension();
+        $request->iconImage->move(public_path('uploads/category'), $picName);
+        return $picName;
+    }
+    public function delete_image(Request $request) {
+        $filename = $request->imageName;
+        $this->deleteFileFromServer($filename);
+        return 'done';
+    }
+
+    public function deleteFileFromServer($filename){
+
+        $filePatch = public_path() . '/uploads/category/'.$filename;
+        if (file_exists($filePatch)){
+            @unlink($filePatch);
+        };
+
     }
 }

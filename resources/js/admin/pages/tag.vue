@@ -117,10 +117,11 @@ export default {
         async deleteTag(deleteItem){
             this.isDeliting = true;
             let res = await this.callApi('delete', '/app/tag/' + deleteItem.id);
+            console.log(res, res.status)
             if (res.status === 200){
                 this.tags.splice(this.deleteI,1)
                 this.showDeleteModal = false;
-                return this.error('Ops !','Erro ao deletar a tag !', 5);
+                return this.success('Ops !','Sucesso ao deletar a tag !', 5);
             }
             else {
                 setTimeout(() => {

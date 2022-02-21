@@ -78,9 +78,4 @@ class TagController extends Controller
     {
         return Tag::destroy($id);
     }
-    public function imageUpload(Request $request){
-        $picName = time(). '.' . $request->iconImage->extension();
-        $request->iconImage->move(public_path('uploads'), $picName);
-        return $picName;
-    }
 }
