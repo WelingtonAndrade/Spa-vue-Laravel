@@ -13,7 +13,6 @@
                                 <th>Id</th>
                                 <th>Categoria</th>
                                 <th>Imagem</th>
-                                <th>Created At</th>
                                 <th>Action</th>
                             </tr>
                             <tr v-for="(category, i) in categories" :key="i" v-if="categories.length">
@@ -69,10 +68,39 @@
                 </Modal>
                 <Modal
                     v-model="editModal"
-                    title="Adicionar Categorias"
+                    title="Editar Categoria"
                     :mask-closable="false"
-                    :closable="false">
-                    <Input v-model="editData.categoryName" placeholder="Insira o Nome da Categoria" />
+                    :closable="false"
+                    name="iconImage">
+                    <Input class="my-1" v-model="editData.categoryName" placeholder="Insira o Nome da Categoria" />
+                    <Upload
+                        v-model="editData.iconImage"
+                        ref="update"
+                        type="drag"
+                        action="/app/category/imageUpload"
+                        :on-success="handleSuccess"
+                        :on-error="handleError"
+                        :max-size="2048"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :headers="{'x-csrf-token' : token, 'X-Requested-With': 'XMLHttpRequest'}"
+                        :format="['jpg','jpeg','png']"
+                        name="iconImage"
+                    >
+                        <div style="padding: 20px 0">
+                            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                            <p>Click or drag files here to upload</p>
+                        </div>
+                    </Upload>
+<!--                    <div class="image_thumb" v-if="data.iconImage">-->
+<!--                        <img :src="`/uploads/${data.iconImage}`"/>-->
+<!--                    </div>-->
+                    <div class="demo-upload-list" v-if="editData.iconImage">
+                            <img  :src="editData.iconImage">
+                            <div class="demo-upload-list-cover">
+                                <Icon type="ios-trash-outline" @click="deleteImagem(false)"></Icon>
+                            </div>
+                    </div>
                     <div slot="footer">
                         <Button @click="editModal=false" type="default">Cancel</Button>
                         <Button @click="editItem(editData)" :disabled="loading" :loading="loading">{{ loading ? 'Editando...' : 'Editar' }}</Button>
@@ -108,6 +136,7 @@ export default {
             editModal: false,
             categories: [],
             editData: {
+                iconImage: '',
                 categoryName: ''
             },
             index: -1,
@@ -115,12 +144,19 @@ export default {
             deleteData: {},
             deleteI: -'',
             isDeliting: false,
-            token: ''
+            token: '',
+            isIconImageNew: false,
+            isEditing: false
         }
     },
     methods: {
         handleSuccess(res, file){
-            this.data.iconImage = res;
+            if (!this.isEditing){
+                this.data.iconImage = res;
+            } else {
+                this.editData.iconImage = `/uploads/category/${res}`;
+            }
+
         },
 
         handleFormatError(file){
@@ -142,11 +178,19 @@ export default {
                 desc: 'File     ' + file.name + 'is too large, no more than 2mb is permited.'
             })
         },
-        async deleteImagem () {
-            let image = this.data.iconImage;
-            this.data.iconImage = '';
+        async deleteImagem (isAdd=true) {
+            if(!isAdd) {
+                this.isIconImageNew = true;
+                var image = this.editData.iconImage;
+                this.editData.iconImage = '';
+                this.$refs.update.clearFiles();
+            }else {
+                var image = this.data.iconImage;
+                this.data.iconImage = '';
+                this.$refs.uploads.clearFiles();
+            }
+
             const res = await this.callApi('post', '/app/category/delete_image', {imageName: image})
-            this.$refs.uploads.clearFiles();
             if(res.status !== 200){
                 this.data.iconImage = image;
             }
@@ -163,7 +207,7 @@ export default {
                 this.data.iconImage = ''
                 this.addModal = false
                 this.loading = false
-
+                this.$refs.uploads.clearFiles();
                 return this.success('Oba !','Categoria criada com Sucesso', 3)
             }
             else if (res.status === 422){
@@ -187,6 +231,7 @@ export default {
                 this.categories.splice(this.deleteI,1)
                 this.showDeleteModal = false;
                 this.isDeliting = false
+
                 return this.success('Oba !','Sucesso ao deletar a Categoria !', 5);
             }
             else {
@@ -208,7 +253,7 @@ export default {
             if (res.status === 200){
                 this.addModal = false;
                 this.loading = false;
-                this.categories[this.index].categoryName = this.categoryData.categoryName;
+                this.categories[this.index].categoryName = this.editData.categoryName;
                 return this.success('Oba !','Categoria editada com Sucesso', 3);
             }
             else if (res.status === 422){
@@ -223,14 +268,11 @@ export default {
                 console.log(res)
             }
         },
-        showEditModal(item, i){
-            let obj = {
-                id: item.id,
-                categoryName: item.categoryName
-            };
-            this.editData = obj;
+        showEditModal(category, index){
+            this.editData = category;
             this.editModal = true;
-            this.index = i;
+            this.index = index
+            this.isEditing = true;
         }
     },
     async created(){
@@ -239,6 +281,7 @@ export default {
 
         if (res.status === 200){
             this.categories = res.data;
+            console.log(this.categories);
         }
         else{
             this.swr();

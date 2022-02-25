@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use function PHPUnit\Framework\fileExists;
 
 class CategoryController extends Controller
 {
@@ -62,9 +63,11 @@ class CategoryController extends Controller
     {
         $this->validate($request, [
             'categoryName' => 'required|min:3|string',
+            'iconImage' => 'required'
         ]);
         return $this->model->where('id', $id)->update([
-            'categoryName' => $request->categoryName
+            'categoryName' => $request->categoryName,
+            'iconImage' => $request->iconImage
         ]);
     }
 
@@ -88,8 +91,10 @@ class CategoryController extends Controller
     }
     public function delete_image(Request $request) {
         $filename = $request->imageName;
-        $this->deleteFileFromServer($filename);
-        return 'done';
+       if ( $this->deleteFileFromServer($filename)){
+        return response()->json('Sucesso ao deletar arquivo',200);
+       }
+       return response()->json('Erro ao deletar arquivo',409);
     }
 
     public function deleteFileFromServer($filename){
@@ -97,7 +102,12 @@ class CategoryController extends Controller
         $filePatch = public_path() . '/uploads/category/'.$filename;
         if (file_exists($filePatch)){
             @unlink($filePatch);
+            return true;
+        }elseif (fileExists(public_path() . $filename)){
+            $filePatch = public_path() .$filename;
+            @unlink($filePatch);
+            return true;
         };
-
+        return false;
     }
 }
